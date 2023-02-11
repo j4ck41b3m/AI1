@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class Generador : MonoBehaviour
 {
-    public GameObject celda;
-    public int width, height, bombsnumber;
+    public GameObject celda, congrats, boom;
+    public int width, height, bombsnumber, bCount, sCount;
     public GameObject[][] map;
     public static Generador gen;
     // Start is called before the first frame update
     void Start()
     {
+        sCount = (width * height) - bombsnumber;
+        bCount = bombsnumber;
        gen = this;
 
         map = new GameObject[width][];
@@ -27,7 +29,7 @@ public class Generador : MonoBehaviour
                 map[i][j] = Instantiate(celda, new Vector2(i, j), Quaternion.identity);
                 map[i][j].GetComponent<celda>().x = i;
                 map[i][j].GetComponent<celda>().y = j;
-
+              
             }
         }
 
@@ -44,6 +46,24 @@ public class Generador : MonoBehaviour
             }
            // map[Random.Range(0, width)][Random.Range(0, height)].GetComponent<SpriteRenderer>().color = Color.red;
         }
+    }
+
+    public void Update()
+    {
+        if (bCount <= 0)
+            boom.SetActive(true);
+        if (sCount <= 0)
+            congrats.SetActive(true);
+    }
+
+    public void lessBombs()
+    {
+        bCount--;
+    }
+
+    public void lessSquares()
+    {
+        sCount--;
     }
 
     public int GetBombsAlrededor(int x, int y)
