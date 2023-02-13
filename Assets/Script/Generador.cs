@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+
 
 public class Generador : MonoBehaviour
 {
     public GameObject celda, congrats, boom;
-    public int width, height, bombsnumber, bCount, sCount;
+    public TMP_InputField Wd, Ht, Bm;
+    public int   bCount, sCount;
+    private int width, height, bombsnumber;
     public GameObject[][] map;
     public static Generador gen;
     // Start is called before the first frame update
     void Start()
     {
+        width = byte.Parse(Wd.text);
+        height = byte.Parse(Ht.text);
+        bombsnumber = byte.Parse(Bm.text);
         sCount = (width * height) - bombsnumber;
         bCount = bombsnumber;
        gen = this;
