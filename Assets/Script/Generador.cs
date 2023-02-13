@@ -2,25 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Generador : MonoBehaviour
 {
-    public GameObject celda, congrats, boom;
+    public GameObject celda, congrats, boom, menu;
     public TMP_InputField Wd, Ht, Bm;
+    public TextMeshProUGUI bleft, tleft;
     public int   bCount, sCount;
-    private int width, height, bombsnumber;
+    private int width, height, bombsnumber, tempbomb;
     public GameObject[][] map;
     public static Generador gen;
+    public Button iniciarPartida;
+    private bool spawned;
     // Start is called before the first frame update
     void Start()
     {
+        spawned = false;
+        Bm.text = "0";
+        Wd.text = "0";
+        Ht.text = "0";
+    }
+
+    public void Spawn()
+    {
+        spawned = true;
         width = byte.Parse(Wd.text);
         height = byte.Parse(Ht.text);
         bombsnumber = byte.Parse(Bm.text);
-        sCount = (width * height) - bombsnumber;
+        
         bCount = bombsnumber;
-       gen = this;
+        gen = this;
 
         map = new GameObject[width][];
 
@@ -36,12 +49,12 @@ public class Generador : MonoBehaviour
                 map[i][j] = Instantiate(celda, new Vector2(i, j), Quaternion.identity);
                 map[i][j].GetComponent<celda>().x = i;
                 map[i][j].GetComponent<celda>().y = j;
-              
+
             }
         }
 
 
-        Camera.main.transform.position = new Vector3((float)width / 2 -0.5f, (float)height / 2 -0.5f, -10);
+        Camera.main.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
 
         for (int i = 0; i < bombsnumber; i++)
         {
@@ -51,16 +64,42 @@ public class Generador : MonoBehaviour
             {
                 map[x][y].GetComponent<celda>().bomb = true;
             }
-           // map[Random.Range(0, width)][Random.Range(0, height)].GetComponent<SpriteRenderer>().color = Color.red;
+            // map[Random.Range(0, width)][Random.Range(0, height)].GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
 
     public void Update()
     {
-        if (bCount <= 0)
-            boom.SetActive(true);
-        if (sCount <= 0)
-            congrats.SetActive(true);
+        sCount = (byte.Parse(Wd.text) * byte.Parse(Ht.text)) - byte.Parse(Bm.text);
+        if (byte.Parse(Wd.text) > 0 && byte.Parse(Ht.text) > 0 && byte.Parse(Bm.text) > 0 && byte.Parse(Bm.text) < sCount)
+        {
+            iniciarPartida.interactable = true;
+        }
+       
+        if (spawned)
+        {
+            if (bCount <= 0)
+            {
+                boom.SetActive(true);
+                menu.SetActive(true);
+            }
+            if (sCount <= 0)
+            {
+                congrats.SetActive(true);
+                menu.SetActive(true);
+
+            }
+
+            bleft.text = bCount.ToString();
+            tleft.text = sCount.ToString();
+
+           
+        }
+        
+    }
+    public void Reload()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void lessBombs()
