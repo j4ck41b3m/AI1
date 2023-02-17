@@ -12,6 +12,7 @@ public class Generador : MonoBehaviour
     public TextMeshProUGUI bleft, tleft;
     public int   bCount, sCount;
     private int width, height, bombsnumber, tempbomb;
+    private int ancho, largo, tnt;
     public GameObject[][] map;
     public static Generador gen;
     public Button iniciarPartida;
@@ -70,11 +71,40 @@ public class Generador : MonoBehaviour
 
     public void Update()
     {
-        sCount = (byte.Parse(Wd.text) * byte.Parse(Ht.text)) - byte.Parse(Bm.text);
-        if (byte.Parse(Wd.text) > 0 && byte.Parse(Ht.text) > 0 && byte.Parse(Bm.text) > 0 && byte.Parse(Bm.text) < sCount)
+        if (Wd.text != null)
+        {
+            ancho = byte.Parse(Wd.text);
+        }
+        else
+        ancho = 0;
+
+        if (Ht.text != null)
+        {
+            largo = byte.Parse(Ht.text);
+        }
+        else
+            ancho = 0;
+
+        if (Bm.text != null)
+        {
+            tnt = byte.Parse(Bm.text);
+        }
+        else
+            tnt = 0;
+
+        
+        sCount = (ancho * largo) - tnt;
+       
+        if (ancho > 0 && largo > 0 && tnt > 0 && tnt < sCount)
         {
             iniciarPartida.interactable = true;
         }
+        else
+        {
+            iniciarPartida.interactable = false;
+        }
+
+        
        
         if (spawned)
         {
