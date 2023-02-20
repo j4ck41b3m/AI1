@@ -7,9 +7,9 @@ using UnityEngine.UI;
 public class celda : MonoBehaviour
 {
     public int x, y;
-    public bool bomb;
+    public bool bomb, bandera;
     public TextMeshProUGUI nums;
-    public GameObject square;
+    public GameObject gen, square, flag;
     public BoxCollider2D box;
    
 
@@ -17,28 +17,38 @@ public class celda : MonoBehaviour
     void Start()
     {
         box = gameObject.GetComponent<BoxCollider2D>();
+        bandera = false;
+        gen = GameObject.Find("Generador");
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        bandera = gen.GetComponent<Generador>().flagged;
     }
 
     private void OnMouseDown()
     {
-        if (bomb)
+        if (bandera)
         {
-            square.GetComponent<SpriteRenderer>().material.color = Color.red;
-            Generador.gen.lessBombs();
-
+            flag.SetActive(true);
         }
         else
         {
-            nums.text = Generador.gen.GetBombsAlrededor(x, y).ToString();
-            Generador.gen.lessSquares();
+            if (bomb)
+            {
+                square.GetComponent<SpriteRenderer>().material.color = Color.red;
+                Generador.gen.lessBombs();
+
+            }
+            else
+            {
+                nums.text = Generador.gen.GetBombsAlrededor(x, y).ToString();
+                Generador.gen.lessSquares();
+            }
+            box.enabled = false;
         }
-        box.enabled = false;
+        
 
     }
 }

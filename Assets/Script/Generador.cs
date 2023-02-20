@@ -16,7 +16,8 @@ public class Generador : MonoBehaviour
     public GameObject[][] map;
     public static Generador gen;
     public Button iniciarPartida;
-    private bool spawned;
+    public bool spawned, flagged;
+    public Toggle flag;
     // Start is called before the first frame update
     void Start()
     {
@@ -71,31 +72,42 @@ public class Generador : MonoBehaviour
 
     public void Update()
     {
-        if (Wd.text != null)
+        if (flag.isOn)
+        {
+            flagged = false;
+
+        }
+        else if (!flag.isOn)  
+        flagged = true;
+
+
+
+
+        if (Wd.text != "")
         {
             ancho = byte.Parse(Wd.text);
         }
         else
         ancho = 0;
 
-        if (Ht.text != null)
+        if (Ht.text != "")
         {
             largo = byte.Parse(Ht.text);
         }
         else
             ancho = 0;
 
-        if (Bm.text != null)
+        if (Bm.text != "")
         {
             tnt = byte.Parse(Bm.text);
         }
         else
             tnt = 0;
 
-        
         sCount = (ancho * largo) - tnt;
-       
-        if (ancho > 0 && largo > 0 && tnt > 0 && tnt < sCount)
+
+
+        if (ancho > 0 && ancho < 13 && largo > 0 && largo < 13 && tnt > 0 && tnt < (ancho * largo))
         {
             iniciarPartida.interactable = true;
         }
@@ -108,7 +120,7 @@ public class Generador : MonoBehaviour
        
         if (spawned)
         {
-            if (bCount <= 0)
+            if (bCount < tnt)
             {
                 boom.SetActive(true);
                 menu.SetActive(true);
